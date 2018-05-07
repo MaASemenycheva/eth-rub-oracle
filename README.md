@@ -1,2 +1,25 @@
-# ether-price-oracle
-ETH/RUB оракул
+# ETH/RUB оракул
+
+[![Solidity 0.4.23](https://img.shields.io/badge/Solidity-0.4.23-brightgreen.svg?style=flat-square&colorB=C99D66)](https://github.com/ethereum/solidity/releases/tag/v0.4.23)
+[![Лицензия MIT](https://img.shields.io/badge/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F-Apache%202.0-green.svg?style=flat-square)](https://www.opensource.org/licenses/MIT)
+
+Реализация ETH/RUB [оракула](https://decenter.org/blockchain/360-blockchain-oracles-rus) на блокчейне Ethereum; для работы с [API Cryptonator](https://cryptonator.com/api) используется [Oraclize](https://oraclize.it).
+
+## Пример использования
+```solidity
+pragma solidity ^0.4.23;
+
+import "github.com/gulitsky/eth-rub-oracle/contracts/ETHRUBOracle.sol";
+
+contract ETHToRUBConverter {
+    ETHRUBOracle public priceOracle;
+
+    function constructor(address priceOracleAddress) public {
+        priceOracle = ETHRUBOracle(priceOracleAddress);
+    }
+
+    function convert(uint amountInEther) public view returns (uint) {
+        return amountInEther * priceOracle.price();
+    }
+}
+```
