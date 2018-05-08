@@ -9,7 +9,12 @@
 ```solidity
 pragma solidity ^0.4.23;
 
-import "github.com/gulitsky/eth-rub-oracle/contracts/ETHRUBOracle.sol";
+interface ETHRUBOracle {
+    function price() public view returns (uint);
+    function updatedAt() public view returns (uint);
+    function isOutOfSync() public view returns (bool);
+    function update(uint delay) public payable;
+}
 
 contract ETHToRUBConverter {
     ETHRUBOracle public priceOracle;
@@ -19,6 +24,7 @@ contract ETHToRUBConverter {
     }
 
     function convert(uint amountInEther) public view returns (uint) {
+        require(!priceOracle.isOutOfSync());
         return amountInEther * priceOracle.price();
     }
 }
