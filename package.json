@@ -28,13 +28,13 @@
     "lint": "run-p lint:*",
     "lint:js": "standard --verbose | snazzy",
     "lint:sol": "solium --dir ./contracts/",
-    "ganache:run": "docker run --name ganache -d -p 8545:8545 trufflesuite/ganache-cli -a 2",
-    "ganache:stop": "docker rm -f ganache",
-    "oraclize:run": "docker run --name oraclize --network host -d gulitsky/oraclize -a 1 --dev",
-    "oraclize:stop": "docker rm -f oraclize",
+    "ganache:run": "docker run --name ganache -d -p 8545:8545 trufflesuite/ganache-cli -a 2 --debug > /dev/null",
+    "ganache:stop": "docker rm -f ganache > /dev/null",
+    "oraclize:run": "docker run --name oraclize --network host -d gulitsky/oraclize -a 1 --dev > /dev/null",
+    "oraclize:stop": "docker rm -f oraclize > /dev/null",
     "test-env:setup": "npm run ganache:run && npm run oraclize:run",
     "test-env:destroy": "npm run oraclize:stop; npm run ganache:stop",
-    "test": "npm run test-env:setup && truffle test --show-events; npm run test-env:destroy"
+    "test": "npm run test-env:setup && darq-truffle test --show-events; npm run test-env:destroy"
   },
   "devDependencies": {
     "dotenv": "^5.0.1",

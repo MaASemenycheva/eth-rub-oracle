@@ -41,5 +41,11 @@ module.exports = {
       network_id: 1
     }
     */
+  },
+  solc: {
+    optimizer: {
+      enabled: true,
+      runs: 200
+    }
   }
 }
