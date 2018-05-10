@@ -12,12 +12,12 @@ pragma solidity ^0.4.23;
 interface ETHRUBOracle {
     function price() public view returns (uint);
     function updatedAt() public view returns (uint);
-    function isOutOfSync() public view returns (bool);
     function update(uint delay) public payable;
+    function isOutOfSync() public view returns (bool);
 }
 
 contract ETHToRUBConverter {
-    ETHRUBOracle public priceOracle;
+    ETHRUBOracle internal priceOracle;
 
     function constructor(address priceOracleAddress) public {
         priceOracle = ETHRUBOracle(priceOracleAddress);

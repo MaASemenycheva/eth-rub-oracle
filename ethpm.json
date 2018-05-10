@@ -1,0 +1,25 @@
+{
+  "name": "eth-rub-oracle",
+  "version": "0.1.0-canary.1",
+  "description": "Реализация ETH/RUB оракула на блокчейне Ethereum.",
+  "authors": [
+    "Андрей Гулицкий <andrey@gulitsky.me> (https://gulitsky.me)"
+  ],
+  "keywords": [
+    "ethereum",
+    "eth",
+    "solidity",
+    "truffle",
+    "ganache",
+    "oraclize",
+    "ruble",
+    "rub",
+    "рубль",
+    "эфириум",
+    "эфир"
+  ],
+  "dependencies": {
+    "oraclize": "^2.0.0"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
+import "oraclize-api/usingOraclize.sol";
 
 contract ETHRUBOracle is usingOraclize {
     uint constant SYNC_TIMEOUT = 120;
@@ -8,16 +8,15 @@ contract ETHRUBOracle is usingOraclize {
 
     uint public price;
     uint public updatedAt;
-    uint public delay;
+    uint internal delay;
 
-    bool public queryQueued;
+    bool private queryQueued;
 
     event Log(string message);
     event Updated(uint price);
 
-    function constructor(uint delay) public {
-        require(delay >= 60);
-        this.delay = delay;
+    constructor(uint delay_) payable public {
+        delay = delay_;
         update(0);
     }
 
@@ -31,16 +30,17 @@ contract ETHRUBOracle is usingOraclize {
         update(delay);
     }
 
-    function update(uint delay) payable public {
+    function update(uint delay_) payable public {
         if (queryQueued) {
             emit Log("Запрос уже добавлен в очередь");
             return;
         }
-        if (oraclize_getPrce("URL") > this.balance) {
+        uint fee = oraclize_getPrice("URL");
+        if ((msg.sender == address(this) && fee > address(this).balance) || (msg.sender != address(this) && fee > msg.value)) {
             emit Log("Недостаточно средств для добавления запроса в очередь");
             return;
         }
-        oraclize_query(delay, "URL", API_QUERY);
+        oraclize_query(delay_, "URL", API_QUERY);
         queryQueued = true;
         emit Log("Запрос добавлен в очередь, ожидаю ответ...");
     }
@@ -49,10 +49,16 @@ contract ETHRUBOracle is usingOraclize {
         /* solium-disable-next-line security/no-block-members */
         return now > updatedAt + delay + SYNC_TIMEOUT;
     }
+
+    function () payable public {
+        if (msg.value >= oraclize_getPrice("URL")) {
+            emit Log("Спасибо за поддержку!");
+        }
+    }
 }
 
 contract ETHRUBTestOracle is ETHRUBOracle {
-    function constructor(address oarAddress, uint delay) ETHRUBOracle(delay) public {
+    constructor(address oarAddress, uint delay_) ETHRUBOracle(delay_) payable public {
         OAR = OraclizeAddrResolverI(oarAddress);
     }
 }
